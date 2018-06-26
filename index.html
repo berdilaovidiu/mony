@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script type="text/javascript" src="countUp.min.js"></script>
+    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div id="appbar">
+
+</div>
+<div id="list">
+    <div class="list_item">
+        <span class="icon_container" id="food"></span>
+        <span class="content_container">
+            <span class="category_name">Mancare</span>
+            <span class="delta" id="delta_food">+122</span>
+            <span class="amount" id="food_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="card"></span>
+        <span class="content_container">
+            <span class="category_name">Retragere numerar</span>
+            <span class="delta" id="delta_card">+100</span>
+            <span class="amount" id="card_amount">234</span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="work"></span>
+        <span class="content_container">
+            <span class="category_name">Afaceri</span>
+            <span class="delta" id="delta_work">+1400</span>
+            <span class="amount" id="work_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="shopping"></span>
+        <span class="content_container">
+            <span class="category_name">Cumparaturi</span>
+            <span class="delta" id="delta_shopping">+100</span>
+            <span class="amount" id="shopping_amount">54</span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+
+</div>
+
+<script>
+    var options = {
+        useEasing: true,
+        useGrouping: true,
+        separator: ',',
+        decimal: '.',
+    };
+    var foodAnimation = new CountUp('food_amount', 678, 800, 0, 0.5, options);
+    if (!foodAnimation.error) {
+        foodAnimation.start(function(){
+            $("#delta_food").animate(
+            {
+                opacity: '0.8'
+            },
+            {
+                easing: "swing",
+                duration: 300
+            });
+
+            $("#delta_food").animate(
+                {
+                    opacity: '0.0'
+                },
+                {
+                    easing: "swing",
+                    duration: 2000
+                });
+        });
+    } else {
+        console.error(foodAnimation.error);
+    }
+
+
+//    var cardAnimation = new CountUp('card_amount', 234, 456, 0, 0.5, options);
+//    if (!cardAnimation.error) {
+//        cardAnimation.start();
+//    } else {
+//        console.error(cardAnimation.error);
+//    }
+
+
+    var workAnimation = new CountUp('work_amount', 1056, 2456, 0, 0.5, options);
+    if (!workAnimation.error) {
+        workAnimation.start(function(){
+            $("#delta_work").stop(true, true).delay(200).animate(
+                {
+                    opacity: '0.8'
+                },
+                {
+                    easing: "swing",
+                    duration: 300
+                });
+
+            $("#delta_work").animate(
+                {
+                    opacity: '0.0'
+                },
+                {
+                    easing: "swing",
+                    duration: 2000
+                });
+        });
+    } else {
+        console.error(workAnimation.error);
+    }
+
+//    var shoppingAnimation = new CountUp('shopping_amount', 54, 103, 0, 0.5, options);
+//    if (!shoppingAnimation.error) {
+//        shoppingAnimation.start();
+//    } else {
+//        console.error(shoppingAnimation.error);
+//    }
+</script>
+
+</body>
+</html>
