@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script type="text/javascript" src="countUp.min.js"></script>
+    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+<div id="appbar">
+
+</div>
+<div id="list">
+    <div class="list_item">
+        <span class="icon_container" id="food"></span>
+        <span class="content_container">
+            <span class="category_name">Mancare</span>
+            <span class="delta"></span>
+            <span class="amount" id="food_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="card"></span>
+        <span class="content_container">
+            <span class="category_name">Retragere numerar</span>
+            <span class="delta"></span>
+            <span class="amount" id="card_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="work"></span>
+        <span class="content_container">
+            <span class="category_name">Afaceri</span>
+            <span class="delta"></span>
+            <span class="amount" id="work_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="shopping"></span>
+        <span class="content_container">
+            <span class="category_name">Cumparaturi</span>
+            <span class="delta"></span>
+            <span class="amount" id="shopping_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="other"></span>
+        <span class="content_container">
+            <span class="category_name">Diverse</span>
+            <span class="delta"></span>
+            <span class="amount" id="other_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="baby"></span>
+        <span class="content_container">
+            <span class="category_name">Copil</span>
+            <span class="delta"></span>
+            <span class="amount" id="baby_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="car"></span>
+        <span class="content_container">
+            <span class="category_name">Transport</span>
+            <span class="delta"></span>
+            <span class="amount" id="car_amount"></span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+
+</div>
+
+<script>
+
+    var arrayContainsValue = function(array, value){
+        return ($.inArray(value, array) >= 0 );
+    }
+
+
+    var numberOfCategories = $( ".list_item" ).length;
+    var numberOfChangedCategories = Math.floor(Math.random() * numberOfCategories) + 1;
+
+    var changedItems = [];
+    for (var index=0; index<numberOfChangedCategories; index++) {
+        var pickedItem = Math.round(Math.random() * numberOfCategories);
+        changedItems.push(pickedItem);
+    }
+
+    var maxAnimationDuration = 1500;
+    var maxDeltaValue = 2000;
+
+
+
+    var animations = [];
+
+    $(".list_item").each(function (index) {
+
+        var amountValue = Math.floor(Math.random() * 3000);
+        $(this).find(".amount").first().text(amountValue);
+
+        if (arrayContainsValue(changedItems, index)) {
+
+            var amountId = $(this).find(".amount").first().attr('id');
+            var deltaElement = $(this).find(".delta").first();
+
+            var deltaValue = Math.floor(Math.random() * maxDeltaValue);
+            deltaElement.text("+" + deltaValue);
+
+            var options = {
+                useEasing: true,
+                useGrouping: true,
+                separator: ',',
+                decimal: '.',
+            };
+
+            var animationDuration = ((deltaValue * maxAnimationDuration) / maxDeltaValue );
+
+            var amountAnimation = new CountUp(amountId, amountValue, (amountValue + deltaValue), 0, animationDuration / 1000, options);
+
+            animations.push([amountAnimation, deltaElement, animationDuration + 200]);
+
+        }
+    });
+
+    var runOneAnimation = function(countUpAnimation, deltaElement){
+
+        countUpAnimation.start(function () {
+
+            deltaElement.animate(
+                {
+                    opacity: '0.8'
+                },
+                {
+                    easing: "swing",
+                    duration: 200
+                });
+
+            deltaElement.animate(
+                {
+                    opacity: '0.0'
+                },
+                {
+                    easing: "swing",
+                    duration: 2500
+                });
+        });
+
+    }
+
+    function startNextAnimation(index) {
+        if (index < animations.length) {
+            var delay = 0;
+            if (index > 0){
+                delay = animations[index -1][2];
+            }
+            console.log(delay);
+            setTimeout(function () {
+                runOneAnimation(animations[index][0], animations[index][1]);
+                startNextAnimation(index + 1);
+            }, delay);
+        }
+    }
+
+    startNextAnimation(0);
+
+
+
+
+</script>
+
+</body>
+</html>
