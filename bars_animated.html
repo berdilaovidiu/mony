@@ -6,8 +6,12 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="index.css">
     <script type="text/javascript" src="countUp.min.js"></script>
-    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+    <!--<script type="text/javascript" src="jquery-3.3.1.min.js"></script>-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
+    <script src="jquery-ui-1.12.1/external/jquery/jquery.js"></script>
+    <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
 </head>
 <body>
 
@@ -112,7 +116,7 @@
         var totalAmount = 0;
         var amounts = [];
 
-        var maxAnimationDuration = 700;
+        var maxAnimationDuration = 1000;
         var maxAmount = 0;
 
         $( ".list_item" ).each(function( index ) {
@@ -159,7 +163,7 @@
             $(element).animate({
                 width: barWidth,
 
-            }, animationDuration);
+            }, animationDuration, "easeOutExpo");
 
         });
     });
