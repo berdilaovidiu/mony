@@ -60,6 +60,39 @@
             </span>
         </span>
     </div>
+    <div class="list_item">
+        <span class="icon_container" id="other"></span>
+        <span class="content_container">
+            <span class="category_name">Diverse</span>
+            <span class="delta" id="delta_other">+100</span>
+            <span class="amount" id="other_amount">234</span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="baby"></span>
+        <span class="content_container">
+            <span class="category_name">Copil</span>
+            <span class="delta" id="delta_baby">+100</span>
+            <span class="amount" id="baby_amount">234</span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
+    <div class="list_item">
+        <span class="icon_container" id="car"></span>
+        <span class="content_container">
+            <span class="category_name">Transport</span>
+            <span class="delta" id="delta_car">+100</span>
+            <span class="amount" id="car_amount">234</span>
+            <span class="currency">RON</span>
+            <span class="contextual_container">
+            </span>
+        </span>
+    </div>
 
 </div>
 
@@ -107,7 +140,7 @@
     var workAnimation = new CountUp('work_amount', 1056, 2456, 0, 0.5, options);
     if (!workAnimation.error) {
         workAnimation.start(function(){
-            $("#delta_work").stop(true, true).delay(200).animate(
+            $("#delta_work").stop(true, true).delay(300).animate(
                 {
                     opacity: '0.8'
                 },

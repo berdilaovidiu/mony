@@ -81,6 +81,15 @@ body{
 #shopping{
     background:url("baseline-add_shopping_cart-24px.svg") center center no-repeat;
 }
+#other{
+    background:url("baseline-explore-24px.svg") center center no-repeat;
+}
+#car{
+    background:url("baseline-local_car_wash-24px.svg") center center no-repeat;
+}
+#baby{
+    background:url("baseline-face-24px.svg") center center no-repeat;
+}
 
 
 
