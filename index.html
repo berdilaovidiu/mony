@@ -19,7 +19,7 @@
         <span class="icon_container" id="food"></span>
         <span class="content_container">
             <span class="category_name">Mancare</span>
-            <span class="delta" id="delta_food">+122</span>
+            <span class="delta"></span>
             <span class="amount" id="food_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
@@ -31,8 +31,8 @@
         <span class="icon_container" id="card"></span>
         <span class="content_container">
             <span class="category_name">Retragere numerar</span>
-            <span class="delta" id="delta_card">+100</span>
-            <span class="amount" id="card_amount">234</span>
+            <span class="delta"></span>
+            <span class="amount" id="card_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
             </span>
@@ -42,7 +42,7 @@
         <span class="icon_container" id="work"></span>
         <span class="content_container">
             <span class="category_name">Afaceri</span>
-            <span class="delta" id="delta_work">+1400</span>
+            <span class="delta"></span>
             <span class="amount" id="work_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
@@ -53,8 +53,8 @@
         <span class="icon_container" id="shopping"></span>
         <span class="content_container">
             <span class="category_name">Cumparaturi</span>
-            <span class="delta" id="delta_shopping">+100</span>
-            <span class="amount" id="shopping_amount">54</span>
+            <span class="delta"></span>
+            <span class="amount" id="shopping_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
             </span>
@@ -64,8 +64,8 @@
         <span class="icon_container" id="other"></span>
         <span class="content_container">
             <span class="category_name">Diverse</span>
-            <span class="delta" id="delta_other">+100</span>
-            <span class="amount" id="other_amount">234</span>
+            <span class="delta"></span>
+            <span class="amount" id="other_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
             </span>
@@ -75,8 +75,8 @@
         <span class="icon_container" id="baby"></span>
         <span class="content_container">
             <span class="category_name">Copil</span>
-            <span class="delta" id="delta_baby">+100</span>
-            <span class="amount" id="baby_amount">234</span>
+            <span class="delta"></span>
+            <span class="amount" id="baby_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
             </span>
@@ -86,8 +86,8 @@
         <span class="icon_container" id="car"></span>
         <span class="content_container">
             <span class="category_name">Transport</span>
-            <span class="delta" id="delta_car">+100</span>
-            <span class="amount" id="car_amount">234</span>
+            <span class="delta"></span>
+            <span class="amount" id="car_amount"></span>
             <span class="currency">RON</span>
             <span class="contextual_container">
             </span>
@@ -97,77 +97,70 @@
 </div>
 
 <script>
-    var options = {
-        useEasing: true,
-        useGrouping: true,
-        separator: ',',
-        decimal: '.',
-    };
-    var foodAnimation = new CountUp('food_amount', 678, 800, 0, 0.5, options);
-    if (!foodAnimation.error) {
-        foodAnimation.start(function(){
-            $("#delta_food").animate(
-            {
-                opacity: '0.8'
-            },
-            {
-                easing: "swing",
-                duration: 300
-            });
 
-            $("#delta_food").animate(
-                {
-                    opacity: '0.0'
-                },
-                {
-                    easing: "swing",
-                    duration: 2000
-                });
-        });
-    } else {
-        console.error(foodAnimation.error);
+    var arrayContainsValue = function(array, value){
+        return ($.inArray(value, array) >= 0 );
     }
 
 
-//    var cardAnimation = new CountUp('card_amount', 234, 456, 0, 0.5, options);
-//    if (!cardAnimation.error) {
-//        cardAnimation.start();
-//    } else {
-//        console.error(cardAnimation.error);
-//    }
+    var numberOfCategories = $( ".list_item" ).length;
+    var numberOfChangedCategories = Math.floor(Math.random() * numberOfCategories) + 1;
 
-
-    var workAnimation = new CountUp('work_amount', 1056, 2456, 0, 0.5, options);
-    if (!workAnimation.error) {
-        workAnimation.start(function(){
-            $("#delta_work").stop(true, true).delay(300).animate(
-                {
-                    opacity: '0.8'
-                },
-                {
-                    easing: "swing",
-                    duration: 300
-                });
-
-            $("#delta_work").animate(
-                {
-                    opacity: '0.0'
-                },
-                {
-                    easing: "swing",
-                    duration: 2000
-                });
-        });
-    } else {
-        console.error(workAnimation.error);
+    var changedItems = [];
+    for (var index=0; index<numberOfChangedCategories; index++) {
+        var pickedItem = Math.round(Math.random() * numberOfCategories);
+        changedItems.push(pickedItem);
     }
 
-//    var shoppingAnimation = new CountUp('shopping_amount', 54, 103, 0, 0.5, options);
-//    if (!shoppingAnimation.error) {
-//        shoppingAnimation.start();
-//    } else {
-//        console.error(shoppingAnimation.error);
-//    }
+    $( ".list_item" ).each(function( index ) {
+
+        var amountValue = Math.floor(Math.random() * 3000);
+        $(this).find(".amount").first().text(amountValue);
+
+        if (arrayContainsValue(changedItems, index)){
+            console.log( index + ": " + $( this ).text() );
+
+            var amountId = $(this).find(".amount").first().attr('id');
+            var deltaElement = $(this).find(".delta").first();
+
+            var deltaValue = Math.floor(Math.random() * 1000);
+            deltaElement.text("+" + deltaValue);
+
+            var options = {
+                useEasing: true,
+                useGrouping: true,
+                separator: ',',
+                decimal: '.',
+            };
+
+            var amountAnimation = new CountUp(amountId, amountValue, (amountValue + deltaValue), 0, 0.5, options);
+            if (!amountAnimation.error) {
+                amountAnimation.start(function(){
+
+                    deltaElement.animate(
+                        {
+                            opacity: '0.8'
+                        },
+                        {
+                            easing: "swing",
+                            duration: 300
+                        });
+
+                    deltaElement.animate(
+                        {
+                            opacity: '0.0'
+                        },
+                        {
+                            easing: "swing",
+                            duration: 2000
+                        });
+                });
+            } else {
+                console.error(amountAnimation.error);
+            }
+        }
+    });
+
 </script>
 
 </body>
