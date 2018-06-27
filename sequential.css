@@ -66,6 +66,7 @@ body{
 .delta{
     opacity: 0;
     color: forestgreen;
+    font-size: 14px;
 }
 
 .contextual_container{
