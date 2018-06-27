@@ -1,0 +1,106 @@
+body{
+    max-width: 411px;
+    max-height: 730px;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid grey;
+
+}
+
+#appbar{
+    width: 100%;
+    height: 164px;
+    background-color: #26308b;
+}
+
+#list{
+    width: 100%;
+    height: calc(100% - 164px);
+}
+
+.list_item{
+    width:100%;
+    height:56px;
+    display: flex;
+    flex-direction: row;
+}
+
+.icon_container{
+    display: inline-block;
+    height: 100%;
+    width: 72px;
+    opacity: 0.87;
+}
+
+.content_container{
+    position: relative;
+    line-height: 100%;
+    font-family: "Roboto";
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    flex-grow: 10;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height:100%;
+    border-bottom: 1px solid lightgray;
+}
+
+.category_name{
+    flex-grow: 10;
+    padding-left: 4px;
+
+}
+
+.amount{
+    margin-right: 4px;
+    margin-left: 8px;
+}
+.amountAndCurrency{
+    transition: all 0.15s ease-in-out;
+}
+
+.delta{
+    opacity: 0;
+    color: forestgreen;
+}
+
+.contextual_container{
+    display: inline-block;
+    height: 100%;
+    width: 52px;
+    background:url("baseline-more_vert-24px.svg") center center no-repeat;
+}
+
+#food{
+    background:url("baseline-local_dining-24px.svg") center center no-repeat;
+}
+#card{
+    background:url("baseline-credit_card-24px.svg") center center no-repeat;
+}
+#work{
+    background:url("baseline-work-24px.svg") center center no-repeat;
+}
+#shopping{
+    background:url("baseline-add_shopping_cart-24px.svg") center center no-repeat;
+}
+#other{
+    background:url("baseline-explore-24px.svg") center center no-repeat;
+}
+#car{
+    background:url("baseline-local_car_wash-24px.svg") center center no-repeat;
+}
+#baby{
+    background:url("baseline-face-24px.svg") center center no-repeat;
+}
+
+
+.grow{
+    transform: scale(1.15, 1.15);
+}
+
+
+
