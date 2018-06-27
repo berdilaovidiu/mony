@@ -98,70 +98,37 @@
 
 <script>
 
-    var arrayContainsValue = function(array, value){
-        return ($.inArray(value, array) >= 0 );
-    }
+    $(document).ready(function(){
+        var totalAmount = 0;
+        var amounts = [];
 
+        $( ".list_item" ).each(function( index ) {
 
-    var numberOfCategories = $( ".list_item" ).length;
-    var numberOfChangedCategories = Math.floor(Math.random() * numberOfCategories) + 1;
+            var amountValue = Math.floor(Math.random() * 3000);
+            $(this).find(".amount").first().text(amountValue);
 
-    var changedItems = [];
-    for (var index=0; index<numberOfChangedCategories; index++) {
-        var pickedItem = Math.round(Math.random() * numberOfCategories);
-        changedItems.push(pickedItem);
-    }
+            amounts[index] = amountValue;
+            totalAmount += amountValue;
+        });
 
-    $( ".list_item" ).each(function( index ) {
+        $( ".content_container" ).each(function( index ) {
 
+            var amount = amounts[index];
+            var maxWidth = $(this).width();
 
+            var barWidth = (amount * maxWidth) / totalAmount;
 
-        var amountValue = Math.floor(Math.random() * 3000);
-        $(this).find(".amount").first().text(amountValue);
+            var element = document.createElement('div');
+            $(element).addClass("bar");
+            $(element).width(barWidth);
+            $(element).appendTo($(this));
 
-        if (arrayContainsValue(changedItems, index)){
-            console.log( index + ": " + $( this ).text() );
-
-            var amountId = $(this).find(".amount").first().attr('id');
-            var deltaElement = $(this).find(".delta").first();
-
-            var deltaValue = Math.floor(Math.random() * 1000);
-            deltaElement.text("+" + deltaValue);
-
-            var options = {
-                useEasing: true,
-                useGrouping: true,
-                separator: ',',
-                decimal: '.',
-            };
-
-            var amountAnimation = new CountUp(amountId, amountValue, (amountValue + deltaValue), 0, 0.5, options);
-            if (!amountAnimation.error) {
-                amountAnimation.start(function(){
-
-                    deltaElement.animate(
-                        {
-                            opacity: '0.8'
-                        },
-                        {
-                            easing: "swing",
-                            duration: 300
-                        });
-
-                    deltaElement.animate(
-                        {
-                            opacity: '0.0'
-                        },
-                        {
-                            easing: "swing",
-                            duration: 2000
-                        });
-                });
-            } else {
-                console.error(amountAnimation.error);
-            }
-        }
+        });
     });
+
+
+
+
 
 </script>
 

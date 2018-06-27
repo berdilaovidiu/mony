@@ -98,70 +98,75 @@
 
 <script>
 
-    var arrayContainsValue = function(array, value){
-        return ($.inArray(value, array) >= 0 );
-    }
+    $(document).ready(function(){
 
-
-    var numberOfCategories = $( ".list_item" ).length;
-    var numberOfChangedCategories = Math.floor(Math.random() * numberOfCategories) + 1;
-
-    var changedItems = [];
-    for (var index=0; index<numberOfChangedCategories; index++) {
-        var pickedItem = Math.round(Math.random() * numberOfCategories);
-        changedItems.push(pickedItem);
-    }
-
-    $( ".list_item" ).each(function( index ) {
-
-
-
-        var amountValue = Math.floor(Math.random() * 3000);
-        $(this).find(".amount").first().text(amountValue);
-
-        if (arrayContainsValue(changedItems, index)){
-            console.log( index + ": " + $( this ).text() );
-
-            var amountId = $(this).find(".amount").first().attr('id');
-            var deltaElement = $(this).find(".delta").first();
-
-            var deltaValue = Math.floor(Math.random() * 1000);
-            deltaElement.text("+" + deltaValue);
-
-            var options = {
-                useEasing: true,
-                useGrouping: true,
-                separator: ',',
-                decimal: '.',
-            };
-
-            var amountAnimation = new CountUp(amountId, amountValue, (amountValue + deltaValue), 0, 0.5, options);
-            if (!amountAnimation.error) {
-                amountAnimation.start(function(){
-
-                    deltaElement.animate(
-                        {
-                            opacity: '0.8'
-                        },
-                        {
-                            easing: "swing",
-                            duration: 300
-                        });
-
-                    deltaElement.animate(
-                        {
-                            opacity: '0.0'
-                        },
-                        {
-                            easing: "swing",
-                            duration: 2000
-                        });
-                });
-            } else {
-                console.error(amountAnimation.error);
+        function skewedRandom() {
+            const a = Math.pow(Math.random(), 2);
+            if (Math.random() < 0.5) {
+                return a;
             }
+            return 1 - a;
         }
+
+
+        var totalAmount = 0;
+        var amounts = [];
+
+        var maxAnimationDuration = 700;
+        var maxAmount = 0;
+
+        $( ".list_item" ).each(function( index ) {
+
+            var amountValue = Math.floor(skewedRandom() * 5000);
+            amounts[index] = amountValue;
+            totalAmount += amountValue;
+            if (amountValue > maxAmount){
+                maxAmount = amountValue;
+            }
+        });
+
+        amounts.sort(function(a, b){
+            if (a>b){
+                return -1;
+            }
+
+            if (a==b){
+                return 0;
+            }
+
+            if (a<b){
+                return 1;
+            }
+
+        });
+
+        $( ".list_item" ).each(function( index ) {
+            $(this).find(".amount").first().text(amounts[index]);
+        });
+
+        $( ".content_container" ).each(function( index ) {
+
+            var amount = amounts[index];
+            var maxWidth = $(this).width();
+
+            var barWidth = (amount * maxWidth) / totalAmount;
+            var animationDuration = (amount * maxAnimationDuration) / maxAmount;
+
+            var element = document.createElement('div');
+            $(element).addClass("bar");
+            $(element).appendTo($(this));
+
+            $(element).animate({
+                width: barWidth,
+
+            }, animationDuration);
+
+        });
     });
+
+
+
+
 
 </script>
 
