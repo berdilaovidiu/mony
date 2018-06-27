@@ -17,6 +17,14 @@
 <div id="appbar">
 
 </div>
+
+<div id="busy_waiting_container">
+    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <p>Mony cauta SMS-uri de la banca...</p>
+</div>
+
 <div id="list">
     <div class="list_item">
         <span class="icon_container" id="food"></span>
@@ -111,7 +119,17 @@
         </span>
     </div>
 
+    <div class="toast_container" id="check_new_toast">
+        <span class="toast_message">8 tranzactii de la ultima vizita</span>
+        <span class="toast_button">revizuieste</span>
+    </div>
+
+    <div class="toast_container" id="sms_count_toast">
+        <span class="toast_message">35 SMS-uri gasite</span>
+    </div>
 </div>
+
+
 
 <script>
 
@@ -166,7 +184,6 @@
         amountElement.parent().addClass("grow");
         countUpAnimation.start(function () {
 
-
             amountElement.parent().removeClass("grow");
 
             deltaElement.addClass("vanish");
@@ -174,7 +191,7 @@
 
     }
 
-    function startNextAnimation(index) {
+    function startDeltaAnimation(index) {
         if (index < animations.length) {
             var delay = 0;
             if (index > 0) {
@@ -183,13 +200,39 @@
             console.log(delay);
             setTimeout(function () {
                 runOneAnimation(animations[index][0], animations[index][1], animations[index][2]);
-                startNextAnimation(index + 1);
+                startDeltaAnimation(index + 1);
             }, delay);
+        }else{
+            showToast($('#check_new_toast'), 5000, animations[index-1][3] + 500);
         }
     }
 
-    startNextAnimation(0);
+    var showToast = function(toastContainer, timeOnScreen, delay){
+        setTimeout(function () {
+            toastContainer.addClass('slide-up', 300, 'easeInOutQuad');
+            toastContainer.removeClass('slide-down');
 
+            setTimeout(function () {
+                toastContainer.addClass('slide-down', 300, 'easeInOutQuad');
+                toastContainer.removeClass('slide-up');
+            }, timeOnScreen);
+
+        }, delay);
+    }
+
+    setTimeout(function(){
+
+        $("#busy_waiting_container").css('display', 'none');
+        $("#list").css('display', 'block');
+
+
+        setTimeout(function(){
+            startDeltaAnimation(0);
+        }, 1500);
+
+        showToast($('#sms_count_toast'), 1000, 300);
+
+    }, 3000);
 
 </script>
 

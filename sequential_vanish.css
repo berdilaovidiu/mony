@@ -8,6 +8,8 @@ body{
     margin-right: auto;
     border: 1px solid grey;
 
+    overflow: hidden;
+
 }
 
 #appbar{
@@ -16,9 +18,29 @@ body{
     background-color: #26308b;
 }
 
+#busy_waiting_container {
+    width: 100%;
+    height: calc(100% - 164px);
+    position: relative;
+    font-family: 'Roboto';
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.88);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#busy_waiting_container p{
+    margin-top: 24px;
+}
+
 #list{
     width: 100%;
     height: calc(100% - 164px);
+    position: relative;
+    overflow: hidden;
+    display: none;
 }
 
 .list_item{
@@ -122,6 +144,81 @@ body{
 
 .grow{
     transform: scale(1.15, 1.15);
+}
+
+.toast_container{
+    width: calc(100% - 48px);
+    height: 48px;
+    left: 24px;
+    bottom: -48px;
+    position:absolute;
+    background-color: #2b2b2b;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.87);
+    font-family: 'Roboto';
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.toast_message{
+    font-size: 14px;
+    flex-grow: 10;
+}
+
+.toast_button{
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.slide-up
+{
+    bottom: 0px !important;
+}
+
+.slide-down
+{
+    bottom: -48px !important;
+}
+
+
+
+
+.spinner {
+    animation: rotator 1.4s linear infinite;
+}
+
+@keyframes rotator {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(270deg); }
+}
+
+.path {
+    stroke-dasharray: 187;
+    stroke-dashoffset: 0;
+    transform-origin: center;
+    animation:
+    dash 1.4s ease-in-out infinite,
+    colors 5.6s ease-in-out infinite;
+}
+
+@keyframes colors {
+    0% { stroke: #AF0E67; }
+    50% { stroke: #039590; }
+    100% { stroke: #DA7930; }
+}
+
+@keyframes dash {
+    0% { stroke-dashoffset: 187; }
+    50% {
+        stroke-dashoffset: 67;
+        transform:rotate(135deg);
+    }
+    100% {
+        stroke-dashoffset: 187;
+        transform:rotate(450deg);
+    }
 }
 
 
