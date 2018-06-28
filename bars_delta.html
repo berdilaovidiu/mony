@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="bars_animated.css">
+    <link rel="stylesheet" type="text/css" href="bars_delta.css">
     <script type="text/javascript" src="countUp.min.js"></script>
-    <!--<script type="text/javascript" src="jquery-3.3.1.min.js"></script>-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
@@ -112,49 +111,61 @@
             return 1 - a;
         }
 
+        var totalFinalAmount = 0;
+        var maxInitialAmount = 0;
+        var amountUpperLimit = 5000;
+        var deltaUpperLimit = 3000;
 
-        var totalAmount = 0;
-        var amounts = [];
+        var initialAndDelta = [];
+        var maxAnimationDuration = 500;
+        var maxDeltaAnimationDuration = 1000;
 
-        var maxAnimationDuration = 1000;
-        var maxAmount = 0;
+        $(".list_item").each(function (index) {
 
-        $( ".list_item" ).each(function( index ) {
+            var initialAmountValue = Math.floor(skewedRandom() * amountUpperLimit);
+            var deltaValue = Math.floor(skewedRandom() * deltaUpperLimit);
+            initialAndDelta[index] = [initialAmountValue, deltaValue];
+            totalFinalAmount += initialAmountValue;
+            totalFinalAmount += deltaValue;
 
-            var amountValue = Math.floor(skewedRandom() * 5000);
-            amounts[index] = amountValue;
-            totalAmount += amountValue;
-            if (amountValue > maxAmount){
-                maxAmount = amountValue;
+
+            if (initialAmountValue > maxInitialAmount) {
+                maxInitialAmount = initialAmountValue;
             }
         });
 
-        amounts.sort(function(a, b){
-            if (a>b){
+        initialAndDelta.sort(function (a, b) {
+            var finalA = a[0] + a[1];
+            var finalB = b[0] + b[1];
+
+            if (finalA > finalB) {
                 return -1;
             }
 
-            if (a==b){
+            if (finalA == finalB) {
                 return 0;
             }
 
-            if (a<b){
+            if (finalA < finalB) {
                 return 1;
             }
 
         });
 
         $( ".list_item" ).each(function( index ) {
-            $(this).find(".amount").first().text(amounts[index]);
+            $(this).find(".amount").first().text(initialAndDelta[index][0]);
         });
+
+        var longestAnimation = 0;
 
         $( ".content_container" ).each(function( index ) {
 
-            var amount = amounts[index];
+            var initialAmountValue = initialAndDelta[index][0];
             var maxWidth = $(this).width();
 
-            var barWidth = (amount * maxWidth) / totalAmount;
-            var animationDuration = (amount * maxAnimationDuration) / maxAmount;
+            var barWidth = (initialAmountValue * maxWidth) / totalFinalAmount;
+            var animationDuration = (initialAmountValue * maxAnimationDuration) / maxInitialAmount;
+            initialAndDelta[index][2] = barWidth;
 
             var element = document.createElement('div');
             $(element).addClass("bar");
@@ -163,9 +174,56 @@
             $(element).animate({
                 width: barWidth,
 
-            }, animationDuration, "easeOutExpo");
+            }, animationDuration, "linear");
+
+            if (animationDuration > longestAnimation){
+                longestAnimation = animationDuration;
+            }
 
         });
+
+        setTimeout(function(){
+
+            $( ".content_container" ).each(function( index ) {
+
+                var deltaValue = initialAndDelta[index][1];
+                var maxWidth = $(this).width();
+
+                var deltaBarWidth = (deltaValue * maxWidth) / totalFinalAmount;
+                var animationDuration = (deltaValue * maxDeltaAnimationDuration) / maxInitialAmount;
+
+                var element = document.createElement('div');
+                $(element).addClass("delta-bar").css('left', initialAndDelta[index][2] + 'px');
+                $(element).appendTo($(this));
+
+                var amountId = $(this).find(".amount").first().attr('id');
+
+                //animate delta bar
+                $(element).animate({
+                    width: deltaBarWidth,
+
+                }, animationDuration, "linear", function(){
+                    $(element).removeClass('delta-bar');
+                    $(element).addClass('bar');
+                });
+
+                // animate amount value
+                var options = {
+                    useEasing: false,
+                    useGrouping: true,
+                    separator: ',',
+                    decimal: '.',
+                };
+
+                var initial = initialAndDelta[index][0];
+                var delta = initialAndDelta[index][1];
+                var amountAnimation = new CountUp(amountId, initial, (initial + delta), 0, animationDuration / 1000, options);
+                amountAnimation.start();
+
+            });
+
+        }, longestAnimation);
+
     });
 
 
