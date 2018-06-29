@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="bars_delta.css">
+    <link rel="stylesheet" type="text/css" href="bars_delta_large.css">
     <script type="text/javascript" src="countUp.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -197,16 +197,10 @@
 
             var element = document.createElement('div');
             $(element).addClass("bar");
+            $(element).css("width", barWidth);
             $(element).appendTo($(this));
 
-            $(element).animate({
-                width: barWidth,
 
-            }, animationDuration, "linear");
-
-            if (animationDuration > longestInitialBarAnimation){
-                longestInitialBarAnimation = animationDuration;
-            }
 
         });
 
@@ -251,6 +245,9 @@
             var amountElement = rowAnimationParams[5];
             var animationDuration = rowAnimationParams[6];
 
+            amountElement.closest('.list_item').find(".icon_container").first().addClass("grow");
+            amountElement.closest('.list_item').addClass("highlight");
+
             //animate delta bar
             $(deltaBar).animate({
                 width: deltaBarWidth,
@@ -258,24 +255,26 @@
             }, animationDuration, "linear", function () {
                 $(deltaBar).removeClass('delta-bar');
                 $(deltaBar).addClass('bar');
-                $(deltaElement).addClass("vanish");
-            });
-//
-//            // animate amount value
-//            var options = {
-//                useEasing: false,
-//                useGrouping: true,
-//                separator: ',',
-//                decimal: '.',
-//            };
-//
-//
-//            var finalAmount = (initialAmount + deltaAmount);
-//            var amountId = amountElement.attr('id');
-//            var amountAnimation = new CountUp(amountId, initialAmount, finalAmount, 0, animationDuration / 1000, options);
-//            amountAnimation.start(function () {
 //                $(deltaElement).addClass("vanish");
-//            });
+            });
+
+            // animate amount value
+            var options = {
+                useEasing: false,
+                useGrouping: true,
+                separator: ',',
+                decimal: '.',
+            };
+
+
+            var finalAmount = (initialAmount + deltaAmount);
+            var amountId = amountElement.attr('id');
+            var amountAnimation = new CountUp(amountId, initialAmount, finalAmount, 0, animationDuration / 1000, options);
+            amountAnimation.start(function () {
+                $(deltaElement).addClass("vanish");
+                amountElement.closest('.list_item').find(".icon_container").first().removeClass("grow");
+                amountElement.closest('.list_item').removeClass("highlight");
+            });
         }
 
         function startDeltaAnimation(index) {
@@ -294,7 +293,7 @@
 
         setTimeout(function () {
             startDeltaAnimation(0);
-        }, longestInitialBarAnimation);
+        }, 200);
 
     });
 
