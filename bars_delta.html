@@ -103,6 +103,10 @@
 
     $(document).ready(function(){
 
+        var arrayContainsValue = function (array, value) {
+            return ($.inArray(value, array) >= 0 );
+        }
+
         function skewedRandom() {
             const a = Math.pow(Math.random(), 2);
             if (Math.random() < 0.5) {
@@ -121,10 +125,23 @@
         var maxDeltaAnimationDuration = 1000;
         var puffAnimationDuration = 1000;
 
+        var numberOfCategories = $(".list_item").length;
+        var numberOfChangedCategories = Math.floor(Math.random() * numberOfCategories) + 1;
+
+        var changedItems = [];
+        for (var index = 0; index < numberOfChangedCategories; index++) {
+            var pickedItem = Math.round(Math.random() * numberOfCategories);
+            changedItems.push(pickedItem);
+        }
+
         $(".list_item").each(function (index) {
 
             var initialAmountValue = Math.floor(skewedRandom() * amountUpperLimit);
-            var deltaValue = Math.floor(skewedRandom() * deltaUpperLimit);
+
+            var deltaValue = 0;
+            if (arrayContainsValue(changedItems, index)) {
+                deltaValue = Math.floor(skewedRandom() * deltaUpperLimit) + 10;
+            }
             initialAndDelta[index] = [initialAmountValue, deltaValue];
             totalFinalAmount += initialAmountValue;
             totalFinalAmount += deltaValue;
@@ -153,6 +170,14 @@
 
         });
 
+        changedItems = [];
+
+        initialAndDelta.forEach(function(row, index){
+            if (row[1]>0){
+                changedItems.push(index);
+            }
+        })
+
         $( ".list_item" ).each(function( index ) {
             $(this).find(".amount").first().text(initialAndDelta[index][0]);
             $(this).find(".delta").first().text("+" + initialAndDelta[index][1]);
@@ -169,7 +194,6 @@
             var animationDuration = (initialAmountValue * maxAnimationDuration) / maxInitialAmount;
             initialAndDelta[index][2] = barWidth;
 
-            animationDuration = 500;
 
             var element = document.createElement('div');
             $(element).addClass("bar");
@@ -190,24 +214,30 @@
 
         $(".content_container").each(function (index) {
 
-            var deltaValue = initialAndDelta[index][1];
+            if (arrayContainsValue(changedItems, index)) {
 
-            var maxWidth = $(this).width();
-            var deltaBarWidth = Math.floor((deltaValue * maxWidth) / totalFinalAmount);
-            var animationDuration = (deltaValue * maxDeltaAnimationDuration) / maxInitialAmount;
+                var deltaValue = initialAndDelta[index][1];
 
-            var element = document.createElement('div');
-            $(element).addClass("delta-bar").css('left', initialAndDelta[index][2] + 'px');
-            $(element).appendTo($(this));
+                var maxWidth = $(this).width();
+                var deltaBarWidth = Math.floor((deltaValue * maxWidth) / totalFinalAmount);
+                deltaBarWidth = Math.max(5, deltaBarWidth);
+                var animationDuration = (deltaValue * maxDeltaAnimationDuration) / maxInitialAmount;
 
-            deltaAnimations[index] = [
-                initialAndDelta[index][0],
-                initialAndDelta[index][1],
-                element,
-                deltaBarWidth,
-                $(this).find(".delta").first(),
-                $(this).find(".amount").first(),
-                animationDuration];
+                animationDuration = 500;
+
+                var element = document.createElement('div');
+                $(element).addClass("delta-bar").css('left', initialAndDelta[index][2] + 'px');
+                $(element).appendTo($(this));
+
+                deltaAnimations.push( [
+                    initialAndDelta[index][0],
+                    initialAndDelta[index][1],
+                    element,
+                    deltaBarWidth,
+                    $(this).find(".delta").first(),
+                    $(this).find(".amount").first(),
+                    animationDuration]);
+            }
         });
 
 
