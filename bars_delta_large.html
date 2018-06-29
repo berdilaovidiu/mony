@@ -245,7 +245,7 @@
             var amountElement = rowAnimationParams[5];
             var animationDuration = rowAnimationParams[6];
 
-            amountElement.closest('.list_item').find(".icon_container").first().addClass("grow");
+            amountElement.closest('.list_item').addClass("grow");
             amountElement.closest('.list_item').addClass("highlight");
 
             //animate delta bar
@@ -272,7 +272,7 @@
             var amountAnimation = new CountUp(amountId, initialAmount, finalAmount, 0, animationDuration / 1000, options);
             amountAnimation.start(function () {
                 $(deltaElement).addClass("vanish");
-                amountElement.closest('.list_item').find(".icon_container").first().removeClass("grow");
+                amountElement.closest('.list_item').removeClass("grow");
                 amountElement.closest('.list_item').removeClass("highlight");
             });
         }
