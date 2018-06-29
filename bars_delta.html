@@ -119,6 +119,7 @@
         var initialAndDelta = [];
         var maxAnimationDuration = 500;
         var maxDeltaAnimationDuration = 1000;
+        var puffAnimationDuration = 1000;
 
         $(".list_item").each(function (index) {
 
@@ -154,9 +155,10 @@
 
         $( ".list_item" ).each(function( index ) {
             $(this).find(".amount").first().text(initialAndDelta[index][0]);
+            $(this).find(".delta").first().text("+" + initialAndDelta[index][1]);
         });
 
-        var longestAnimation = 0;
+        var longestInitialBarAnimation = 0;
 
         $( ".content_container" ).each(function( index ) {
 
@@ -167,6 +169,8 @@
             var animationDuration = (initialAmountValue * maxAnimationDuration) / maxInitialAmount;
             initialAndDelta[index][2] = barWidth;
 
+            animationDuration = 500;
+
             var element = document.createElement('div');
             $(element).addClass("bar");
             $(element).appendTo($(this));
@@ -176,55 +180,94 @@
 
             }, animationDuration, "linear");
 
-            if (animationDuration > longestAnimation){
-                longestAnimation = animationDuration;
+            if (animationDuration > longestInitialBarAnimation){
+                longestInitialBarAnimation = animationDuration;
             }
 
         });
 
-        setTimeout(function(){
+        var deltaAnimations = [];
 
-            $( ".content_container" ).each(function( index ) {
+        $(".content_container").each(function (index) {
 
-                var deltaValue = initialAndDelta[index][1];
-                var maxWidth = $(this).width();
+            var deltaValue = initialAndDelta[index][1];
 
-                var deltaBarWidth = (deltaValue * maxWidth) / totalFinalAmount;
-                var animationDuration = (deltaValue * maxDeltaAnimationDuration) / maxInitialAmount;
+            var maxWidth = $(this).width();
+            var deltaBarWidth = Math.floor((deltaValue * maxWidth) / totalFinalAmount);
+            var animationDuration = (deltaValue * maxDeltaAnimationDuration) / maxInitialAmount;
 
-                var element = document.createElement('div');
-                $(element).addClass("delta-bar").css('left', initialAndDelta[index][2] + 'px');
-                $(element).appendTo($(this));
+            var element = document.createElement('div');
+            $(element).addClass("delta-bar").css('left', initialAndDelta[index][2] + 'px');
+            $(element).appendTo($(this));
 
-                var amountId = $(this).find(".amount").first().attr('id');
+            deltaAnimations[index] = [
+                initialAndDelta[index][0],
+                initialAndDelta[index][1],
+                element,
+                deltaBarWidth,
+                $(this).find(".delta").first(),
+                $(this).find(".amount").first(),
+                animationDuration];
+        });
 
-                //animate delta bar
-                $(element).animate({
-                    width: deltaBarWidth,
 
-                }, animationDuration, "linear", function(){
-                    $(element).removeClass('delta-bar');
-                    $(element).addClass('bar');
-                });
+        var runRowAnimation = function (index) {
+            var rowAnimationParams = deltaAnimations[index];
+            var initialAmount = rowAnimationParams[0];
+            var deltaAmount = rowAnimationParams[1];
+            var deltaBar = rowAnimationParams[2];
+            var deltaBarWidth = rowAnimationParams[3];
+            var deltaElement = rowAnimationParams[4];
+            var amountElement = rowAnimationParams[5];
+            var animationDuration = rowAnimationParams[6];
 
-                // animate amount value
-                var options = {
-                    useEasing: false,
-                    useGrouping: true,
-                    separator: ',',
-                    decimal: '.',
-                };
+            //animate delta bar
+            $(deltaBar).animate({
+                width: deltaBarWidth,
 
-                var initial = initialAndDelta[index][0];
-                var delta = initialAndDelta[index][1];
-                var amountAnimation = new CountUp(amountId, initial, (initial + delta), 0, animationDuration / 1000, options);
-                amountAnimation.start();
-
+            }, animationDuration, "linear", function () {
+                $(deltaBar).removeClass('delta-bar');
+                $(deltaBar).addClass('bar');
             });
 
-        }, longestAnimation);
+            // animate amount value
+            var options = {
+                useEasing: false,
+                useGrouping: true,
+                separator: ',',
+                decimal: '.',
+            };
+
+
+            var finalAmount = (initialAmount + deltaAmount);
+            var amountId = amountElement.attr('id');
+            var amountAnimation = new CountUp(amountId, initialAmount, finalAmount, 0, animationDuration / 1000, options);
+            amountAnimation.start(function () {
+                $(deltaElement).addClass("vanish");
+            });
+        }
+
+        function startDeltaAnimation(index) {
+            if (index < deltaAnimations.length) {
+                var delay = 0;
+                if (index > 0) {
+                    delay = deltaAnimations[index - 1][6] + (puffAnimationDuration / 2);
+                }
+                console.log(delay);
+                setTimeout(function () {
+                    runRowAnimation(index);
+                    startDeltaAnimation(index + 1);
+                }, delay);
+            }
+        }
+
+        setTimeout(function () {
+            startDeltaAnimation(0);
+        }, longestInitialBarAnimation);
 
     });
+
+
 
 
 
